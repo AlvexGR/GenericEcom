@@ -4,6 +4,11 @@
   padding: 0;
 }
 
+*:focus {
+  outline: none;
+  box-shadow: none !important;
+}
+
 body {
   font-family: K2D, Arial, Helvetica;
 }
