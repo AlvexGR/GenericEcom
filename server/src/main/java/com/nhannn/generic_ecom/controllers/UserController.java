@@ -21,6 +21,7 @@ public class UserController {
 
     @GetMapping
     public User getUser() {
-        return userService.getById(1);
+        User user = userService.getById(1);
+        return user;
     }
 }

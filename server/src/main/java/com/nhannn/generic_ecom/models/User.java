@@ -39,9 +39,11 @@ public class User extends BaseModel {
     private Boolean gender;
 
     @Column(name = "status", nullable = false)
+    @Enumerated(EnumType.STRING)
     private UserStatus status;
 
     @Column(name = "role", nullable = false)
+    @Enumerated(EnumType.STRING)
     private Role role;
 
     @Lob
