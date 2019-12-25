@@ -1,5 +1,7 @@
 package com.nhannn.generic_ecom.controllers;
 
+import com.nhannn.generic_ecom.helpers.enums.Role;
+import com.nhannn.generic_ecom.models.User;
 import com.nhannn.generic_ecom.services.interfaces.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -18,7 +20,7 @@ public class UserController {
     }
 
     @GetMapping
-    public String checkConnection() {
-        return "HELLO WORLD";
+    public User getUser() {
+        return userService.getById(1);
     }
 }

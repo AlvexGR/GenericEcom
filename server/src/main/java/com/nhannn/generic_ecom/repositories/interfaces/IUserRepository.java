@@ -1,4 +1,9 @@
 package com.nhannn.generic_ecom.repositories.interfaces;
 
-public interface IUserRepository {
+import com.nhannn.generic_ecom.models.User;
+
+/*
+ * Author: nhannn
+ * */
+public interface IUserRepository extends IBaseRepository<User> {
 }

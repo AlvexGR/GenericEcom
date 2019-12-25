@@ -1,5 +1,6 @@
 package com.nhannn.generic_ecom.services;
 
+import com.nhannn.generic_ecom.models.User;
 import com.nhannn.generic_ecom.repositories.interfaces.IUserRepository;
 import com.nhannn.generic_ecom.services.interfaces.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,5 +14,10 @@ public class UserService implements IUserService {
     @Autowired
     public UserService(@Qualifier("userRepo") IUserRepository userRepository) {
         this.userRepository = userRepository;
+    }
+
+    @Override
+    public User getById(int id) {
+        return userRepository.getById(User.class, id);
     }
 }
