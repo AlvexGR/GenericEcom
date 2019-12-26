@@ -6,13 +6,16 @@ import com.nhannn.generic_ecom.helpers.enums.UserStatus;
 import javax.persistence.*;
 import java.util.Date;
 
+/**
+ * Author: nhannn
+ */
 @Entity
 @Table(name = "users")
 public class User extends BaseModel {
 
     @Id
     @Column(name = "id", nullable = false)
-    private Integer id;
+    private String id;
 
     @Column(name = "first_name", nullable = false)
     private String firstName;
@@ -62,11 +65,11 @@ public class User extends BaseModel {
     public User() {
     }
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 

@@ -13,9 +13,10 @@ import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.Base64;
 
-/*
-* Source: https://stackoverflow.com/questions/1132567/encrypt-password-in-configuration-files
-* */
+/**
+ * Author: nhannn
+ * Source: https://stackoverflow.com/questions/1132567/encrypt-password-in-configuration-files
+ */
 public class Encryption {
     private static final String password = "8b538870-f9b1-42cc-b241-6e3b4c2de020";
     private static final String salt = "9d45a5db-dd1d-4300-8435-c102dd2d1dc3";

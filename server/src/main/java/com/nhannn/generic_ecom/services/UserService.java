@@ -7,6 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+/**
+ * Author: nhannn
+ */
 @Service("userSer")
 public class UserService implements IUserService {
     private final IUserRepository userRepository;
@@ -20,4 +23,15 @@ public class UserService implements IUserService {
     public User getById(int id) {
         return userRepository.getById(User.class, id);
     }
+
+    @Override
+    public void insert(User user) {
+        try {
+            userRepository.insert(user);
+        } catch (Exception ex) {
+            throw ex;
+        }
+    }
+
+
 }
