@@ -1,4 +1,4 @@
-package com.nhannn.generic_ecom.repositories;
+package com.nhannn.generic_ecom.configs;
 
 import com.nhannn.generic_ecom.helpers.Encryption;
 import org.springframework.boot.jdbc.DataSourceBuilder;
@@ -7,9 +7,9 @@ import org.springframework.context.annotation.Configuration;
 
 import javax.sql.DataSource;
 
-/*
-* Author: nhannn
-* */
+/**
+ * Author: nhannn
+ */
 @Configuration
 public class DataSourceConfiguration {
     @Bean
