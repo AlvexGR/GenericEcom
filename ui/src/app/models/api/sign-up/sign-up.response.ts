@@ -1,8 +1,6 @@
-import { BaseResponse } from '../base.response';
+import { BaseResponse } from "../base.response";
 
 /**
  * Author: nhannn
  */
-export class SignUpResponse extends BaseResponse {
-  
-}
+export class SignUpResponse extends BaseResponse {}

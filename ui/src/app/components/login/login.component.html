@@ -14,7 +14,9 @@
                 type="email"
                 class="form-control"
                 formControlName="email"
+                [ngClass]="{'is-invalid': errors.emailError != null}"
               />
+              <div class="text-danger">{{ errors.emailError }}</div>
             </div>
             <div class="form-group">
               <label>Password</label>
@@ -22,7 +24,9 @@
                 type="password"
                 class="form-control"
                 formControlName="password"
+                [ngClass]="{'is-invalid': errors.passwordError != null}"
               />
+              <div class="text-danger">{{ errors.passwordError }}</div>
             </div>
             <div class="form-group">
               <button
@@ -41,6 +45,9 @@
                 <span class="spinner-border spinner-border-sm"></span>
                 Checking credentials...
               </button>
+            </div>
+            <div class="text-danger text-center form-group">
+              <div class="text-danger">{{ errors.generalError }}</div>
             </div>
             <div class="form-group text-center">
               <a href="#">Forgot your password?</a>
@@ -66,11 +73,6 @@
               </button>
             </div>
           </form>
-        </div>
-        <div class="card-footer">
-          <div class="text-danger text-center">
-            Unknown errors go here!!!
-          </div>
         </div>
       </div>
     </div>

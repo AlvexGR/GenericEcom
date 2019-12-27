@@ -7,11 +7,11 @@ export class HttpHelper {
   static baseUrl = "http://localhost:8080/api/";
   static usersUrl = "users/";
 
-  public static createHeader(authToken: string = ""): HttpHeaders {
+  public static createHeader(accessToken: string = ""): HttpHeaders {
     return new HttpHeaders({
       "Content-Type":  "application/json",
       "Accept": "application/json",
-      "Authorization": authToken || ""
+      "Authorization": accessToken || ""
     });
   }
 }

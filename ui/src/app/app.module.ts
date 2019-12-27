@@ -12,6 +12,7 @@ import { UserService } from "./services/user-service/user.service";
 import { HeaderComponent } from "./components/header/header.component";
 import { MenuComponent } from "./components/menu/menu.component";
 import { FooterComponent } from "./components/footer/footer.component";
+import { SignUpSuccessComponent } from './components/sign-up/sign-up-success/sign-up-success.component';
 
 /**
  * Author: nhannn
@@ -24,7 +25,8 @@ import { FooterComponent } from "./components/footer/footer.component";
     DashboardComponent,
     HeaderComponent,
     MenuComponent,
-    FooterComponent
+    FooterComponent,
+    SignUpSuccessComponent
   ],
   imports: [
     BrowserModule,

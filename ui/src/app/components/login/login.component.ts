@@ -1,6 +1,5 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, OnDestroy } from "@angular/core";
 import { UserService } from "src/app/services/user-service/user.service";
-import { LoginResponse } from "src/app/models/api/login/login.response";
 import {
   FormBuilder,
   FormGroup,
@@ -8,6 +7,9 @@ import {
   AbstractControl
 } from "@angular/forms";
 import { ActivatedRoute } from "@angular/router";
+import { Subscription } from 'rxjs';
+import { ErrorCode, errorMessage } from 'src/app/helpers/enums/error-code.enum';
+import { filter } from "rxjs/operators";
 
 /**
  * Author: nhannn
@@ -17,23 +19,21 @@ import { ActivatedRoute } from "@angular/router";
   templateUrl: "./login.component.html",
   styleUrls: ["./login.component.css"]
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, OnDestroy {
   loginForm: FormGroup;
   waitingForResponse = false;
   returnUrl: string;
+  subscriptions: Subscription[];
+  errors: any = {
+    generalError: null,
+    emailError: null,
+    passwordError: null,
+  };
   constructor(
     private userService: UserService,
     private formBuilder: FormBuilder,
     private route: ActivatedRoute
   ) {}
-
-  get email(): AbstractControl {
-    return this.loginForm.get("email");
-  }
-
-  get password(): AbstractControl {
-    return this.loginForm.get("password");
-  }
 
   ngOnInit(): void {
     this.loginForm = this.formBuilder.group({
@@ -42,8 +42,43 @@ export class LoginComponent implements OnInit {
     });
     this.returnUrl = this.route.snapshot.queryParamMap.get("returnUrl") || "/";
     this.waitingForResponse = false;
+    this.setUpFormControlValidationSubscriptions();
   }
 
+  /**
+   * Set up subscription for form validation
+   */
+  setUpFormControlValidationSubscriptions(): void {
+    this.subscriptions = [
+      this.email.statusChanges
+        .pipe(filter(status => status === "VALID" || status === "INVALID"))
+        .subscribe(status => {
+          if (status === "VALID") {
+            this.errors.emailError = null;
+          } else {
+            this.handleError(ErrorCode.EmailEmpty);
+          }
+        }),
+      this.password.statusChanges
+        .pipe(filter(status => status === "VALID" || status === "INVALID"))
+        .subscribe(status => {
+          if (status === "VALID") {
+            this.errors.passwordError = null;
+          } else {
+            this.handleError(ErrorCode.PasswordEmpty);
+          }
+        }),
+    ];
+  }
+
+  ngOnDestroy(): void {
+    // Unsubscribe to release resources
+    this.subscriptions.forEach(sub => sub.unsubscribe());
+  }
+
+  /**
+   * Perform login, send user's credentials to backend server to validate
+   */
   async login(): Promise<void> {
     this.waitingForResponse = true;
     const loginResponse = await this.userService.login(
@@ -52,5 +87,58 @@ export class LoginComponent implements OnInit {
     );
     console.log(loginResponse);
     this.waitingForResponse = false;
+  }
+
+  /**
+   * Reset all the error strings
+   */
+  resetErrorMessage() {
+    this.errors.generalError = null;
+    this.errors.emailError = null;
+    this.errors.passwordError = null;
+  }
+
+  /**
+   * Display errors to the UI
+   * @param errorCode errorCode to define error
+   * @param reset should reset all the message
+   */
+  handleError(errorCode: ErrorCode, reset: boolean = false): boolean {
+    if (reset) {
+      this.resetErrorMessage();
+    }
+    if (!errorCode) {
+      this.errors.generalError = errorMessage.INTERNAL_ERROR;
+      return false;
+    }
+    if (errorCode !== ErrorCode.Success) {
+      switch (errorCode) {
+        case ErrorCode.EmailEmpty:
+          this.errors.emailError = errorMessage.EMAIL_EMPTY;
+          break;
+        case ErrorCode.EmailExisted:
+          this.errors.emailError = errorMessage.EMAIL_EXISTED;
+          break;
+        case ErrorCode.PasswordEmpty:
+          this.errors.passwordError = errorMessage.PASSWORD_EMPTY;
+          break;
+        case ErrorCode.LoginFailed:
+          this.errors.generalError = errorMessage.LOGIN_FAILED;
+          break;
+        case ErrorCode.InternalError:
+          this.errors.generalError = errorMessage.INTERNAL_ERROR;
+          break;
+      }
+      return false;
+    }
+    return true;
+  }
+
+  get email(): AbstractControl {
+    return this.loginForm.get("email");
+  }
+
+  get password(): AbstractControl {
+    return this.loginForm.get("password");
   }
 }

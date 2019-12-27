@@ -8,22 +8,34 @@
         </div>
         <div class="card-body">
           <form [formGroup]="signUpForm" (ngSubmit)="signUp()">
-            <div class="row">
-              <div class="col form-group">
-                <label>First name</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  formControlName="firstName"
-                />
+            <div class="form-group">
+              <div class="row">
+                <div class="col">
+                  <label>First name</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    formControlName="firstName"
+                    [ngClass]="{'is-invalid': errors.firstNameError != null}"
+                  />
+                </div>
+                <div class="col">
+                  <label>Last name</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    formControlName="lastName"
+                    [ngClass]="{'is-invalid': errors.lastNameError != null}"
+                  />
+                </div>
               </div>
-              <div class="col form-group">
-                <label>Last name</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  formControlName="lastName"
-                />
+              <div class="row">
+                <div class="col">
+                  <div class="text-danger">{{ errors.firstNameError }}</div>
+                </div>
+                <div class="col">
+                  <div class="text-danger">{{ errors.lastNameError }}</div>
+                </div>
               </div>
             </div>
             <div class="form-group">
@@ -32,7 +44,9 @@
                 type="email"
                 class="form-control"
                 formControlName="email"
+                [ngClass]="{'is-invalid': errors.emailError != null}"
               />
+              <div class="text-danger">{{ errors.emailError }}</div>
             </div>
             <div class="form-group">
               <div class="row">
@@ -42,6 +56,7 @@
                     type="password"
                     class="form-control"
                     formControlName="password"
+                    [ngClass]="{'is-invalid': errors.passwordError != null}"
                   />
                 </div>
                 <div class="col">
@@ -49,29 +64,39 @@
                   <input
                     type="password"
                     class="form-control"
-                    pattern="{{ password.value }}"
                     formControlName="passwordConfirm"
+                    [ngClass]="{'is-invalid': errors.passwordConfirmError != null}"
                   />
                 </div>
               </div>
-              <small class="form-text text-muted"
-                >At least 1 upper case letter (A-Z)</small
-              >
-              <small class="form-text text-muted"
-                >At least 1 lower case letter (a-z)</small
-              >
-              <small class="form-text text-muted"
-                >At least 1 number (0-9)</small
-              >
-              <small class="form-text text-muted">At least 8 characters</small>
+              <div class="row">
+                <div class="col">
+                  <div class="text-danger">{{ errors.passwordError }}</div>
+                  <small class="form-text text-muted">
+                    At least 1 upper case letter (A-Z)
+                  </small>
+                  <small class="form-text text-muted">
+                    At least 1 lower case letter (a-z)
+                  </small>
+                  <small class="form-text text-muted">
+                    At least 1 number (0-9)
+                  </small>
+                  <small class="form-text text-muted">At least 8 characters</small>
+                </div>
+                <div class="col">
+                  <div class="text-danger">{{ errors.passwordConfirmError }}</div>
+                </div>
+              </div>
             </div>
             <div class="form-group">
               <label>Phone number</label>
               <input
-                type="email"
+                type="text"
                 class="form-control"
                 formControlName="phoneNumber"
+                [ngClass]="{'is-invalid': errors.phoneNumberError != null}"
               />
+              <div class="text-danger">{{ errors.phoneNumberError }}</div>
             </div>
             <div class="form-group">
               <label>Date of birth</label>
@@ -127,15 +152,13 @@
                 Signing up...
               </button>
             </div>
+            <div class="text-danger text-center form-group">
+              {{ errors.generalError }}
+            </div>
             <div class="form-group text-center mb-0">
               Already have an account? <a href="login">Login!</a>
             </div>
           </form>
-        </div>
-        <div class="card-footer">
-          <div class="text-danger text-center">
-            Unknown errors go here!!!
-          </div>
         </div>
       </div>
     </div>
