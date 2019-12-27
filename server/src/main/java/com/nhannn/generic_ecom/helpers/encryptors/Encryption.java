@@ -1,4 +1,4 @@
-package com.nhannn.generic_ecom.helpers;
+package com.nhannn.generic_ecom.helpers.encryptors;
 
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
@@ -6,9 +6,7 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
-import java.io.IOException;
 import java.security.AlgorithmParameters;
-import java.security.GeneralSecurityException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.Base64;
