@@ -26,15 +26,14 @@ public class UserController {
     }
 
     @GetMapping
-    public User getUser() {
-        User user = userService.getById(1);
+    public User getById() {
+        User user = userService.getBy("c6f5e832-42b7-43b6-a042-a77ed6e52f5d");
         return user;
     }
 
     @PostMapping(path = "sign-up")
     public SignUpResponse signUp(@RequestBody SignUpRequest signUpRequest) {
         try {
-            signUpRequest.getUser().setId(UUID.randomUUID().toString());
             userService.insert(signUpRequest.getUser());
             return new SignUpResponse(true);
         } catch(Exception ex) {
@@ -45,7 +44,16 @@ public class UserController {
 
     @PostMapping(path = "login")
     public LoginResponse login(@RequestBody LoginRequest loginRequest) {
-        User user = this.userService.getById(1);
-        return new LoginResponse(user);
+        LoginResponse loginResponse = new LoginResponse();
+        try {
+            User user = this.userService.getBy(loginRequest.getEmail(), loginRequest.getPassword());
+            loginResponse.setUser(user);
+            loginResponse.setSuccess(true);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            loginResponse.setUser(null);
+            loginResponse.setSuccess(false);
+        }
+        return loginResponse;
     }
 }

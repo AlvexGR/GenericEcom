@@ -3,10 +3,8 @@ package com.nhannn.generic_ecom.repositories;
 import com.nhannn.generic_ecom.models.BaseModel;
 import com.nhannn.generic_ecom.repositories.interfaces.IBaseRepository;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
-import java.util.List;
 
 /**
  * Author: nhannn
@@ -16,12 +14,8 @@ public class BaseRepository<TEntity extends BaseModel> implements IBaseRepositor
     protected EntityManager entityManager;
 
     @Override
-    public TEntity getById(Class<TEntity> objClass , int id) {
-        try {
-            return entityManager.find(objClass, id);
-        } catch(Exception ex) {
-            throw ex;
-        }
+    public TEntity getById(Class<TEntity> objClass , String id) {
+        return entityManager.find(objClass, id);
     }
 
     @Transactional

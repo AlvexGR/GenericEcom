@@ -9,6 +9,11 @@ import com.nhannn.generic_ecom.models.apis.BaseResponse;
 public class LoginResponse extends BaseResponse {
     private User user;
 
+    public LoginResponse(boolean success, User user) {
+        super(success);
+        this.user = user;
+    }
+
     public LoginResponse(User user) {
         this.user = user;
     }

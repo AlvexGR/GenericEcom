@@ -6,4 +6,5 @@ import com.nhannn.generic_ecom.models.User;
  * Author: nhannn
  */
 public interface IUserRepository extends IBaseRepository<User> {
+    User getBy(String email, String password);
 }

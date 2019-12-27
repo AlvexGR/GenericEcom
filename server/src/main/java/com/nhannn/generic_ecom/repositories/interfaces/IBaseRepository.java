@@ -6,6 +6,6 @@ import com.nhannn.generic_ecom.models.BaseModel;
  * Author: nhannn
  */
 public interface IBaseRepository<TEntity extends BaseModel> {
-    TEntity getById(Class<TEntity> objClass, int id);
+    TEntity getById(Class<TEntity> objClass, String id);
     void insert(TEntity obj);
 }
