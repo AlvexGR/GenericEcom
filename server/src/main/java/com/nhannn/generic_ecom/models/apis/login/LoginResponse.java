@@ -8,14 +8,17 @@ import com.nhannn.generic_ecom.models.apis.BaseResponse;
  */
 public class LoginResponse extends BaseResponse {
     private User user;
+    private String jwtToken;
 
-    public LoginResponse(boolean success, User user) {
+    public LoginResponse(boolean success, User user, String jwtToken) {
         super(success);
         this.user = user;
+        this.jwtToken = jwtToken;
     }
 
-    public LoginResponse(User user) {
+    public LoginResponse(User user, String jwtToken) {
         this.user = user;
+        this.jwtToken = jwtToken;
     }
 
     public LoginResponse() {
@@ -27,5 +30,13 @@ public class LoginResponse extends BaseResponse {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public String getJwtToken() {
+        return jwtToken;
+    }
+
+    public void setJwtToken(String jwtToken) {
+        this.jwtToken = jwtToken;
     }
 }

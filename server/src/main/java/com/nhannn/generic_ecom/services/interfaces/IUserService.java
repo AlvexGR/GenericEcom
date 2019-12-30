@@ -1,12 +1,13 @@
 package com.nhannn.generic_ecom.services.interfaces;
 
 import com.nhannn.generic_ecom.models.User;
+import org.springframework.security.core.userdetails.UserDetails;
 
 /**
  * Author: nhannn
  */
 public interface IUserService {
-    User getBy(String id);
-    User getBy(String email, String password);
+    User getById(String id);
+    User getByEmail(String email);
     void insert(User user);
 }

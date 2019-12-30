@@ -4,7 +4,7 @@ package com.nhannn.generic_ecom.models.apis;
  * Author: nhannn
  */
 public class BaseResponse {
-    protected boolean success;
+    protected boolean success = false;
 
     public BaseResponse(boolean success) {
         this.success = success;

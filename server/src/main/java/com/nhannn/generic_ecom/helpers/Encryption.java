@@ -1,4 +1,4 @@
-package com.nhannn.generic_ecom.helpers.encryptors;
+package com.nhannn.generic_ecom.helpers;
 
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
@@ -13,6 +13,7 @@ import java.util.Base64;
 
 /**
  * Author: nhannn
+ * AES/CBC/PKCS5Padding Algorithm
  * Source: https://stackoverflow.com/questions/1132567/encrypt-password-in-configuration-files
  */
 public class Encryption {

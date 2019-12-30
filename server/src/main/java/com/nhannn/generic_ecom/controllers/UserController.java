@@ -5,9 +5,14 @@ import com.nhannn.generic_ecom.models.apis.login.LoginRequest;
 import com.nhannn.generic_ecom.models.apis.login.LoginResponse;
 import com.nhannn.generic_ecom.models.apis.sign_up.SignUpRequest;
 import com.nhannn.generic_ecom.models.apis.sign_up.SignUpResponse;
+import com.nhannn.generic_ecom.security.JwtToken;
+import com.nhannn.generic_ecom.security.JwtUserDetailsService;
 import com.nhannn.generic_ecom.services.interfaces.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -19,15 +24,29 @@ import java.util.UUID;
 @RestController
 public class UserController {
     private final IUserService userService;
+    private final AuthenticationManager authenticationManager;
+    private final JwtToken jwtToken;
+    private final JwtUserDetailsService jwtUserDetailsService;
 
     @Autowired
-    public UserController(@Qualifier("userSer") IUserService userService) {
+    public UserController(
+            IUserService userService,
+            AuthenticationManager authenticationManager,
+            JwtToken jwtToken,
+            JwtUserDetailsService jwtUserDetailsService) {
         this.userService = userService;
+        this.authenticationManager = authenticationManager;
+        this.jwtToken = jwtToken;
+        this.jwtUserDetailsService = jwtUserDetailsService;
     }
 
+    /**
+     * API testing
+     * @return user
+     */
     @GetMapping
     public User getById() {
-        User user = userService.getBy("c6f5e832-42b7-43b6-a042-a77ed6e52f5d");
+        User user = userService.getById("0a51df0c-9e36-4051-87fc-d9992b62f940");
         return user;
     }
 
@@ -44,16 +63,20 @@ public class UserController {
 
     @PostMapping(path = "login")
     public LoginResponse login(@RequestBody LoginRequest loginRequest) {
-        LoginResponse loginResponse = new LoginResponse();
         try {
-            User user = this.userService.getBy(loginRequest.getEmail(), loginRequest.getPassword());
+            LoginResponse loginResponse = new LoginResponse();
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
+            UserDetails userDetails = jwtUserDetailsService.loadUserByUsername(loginRequest.getEmail());
+            String token = jwtToken.generateToken(userDetails);
+            loginResponse.setJwtToken(token);
+
+            User user = userService.getByEmail(loginRequest.getEmail());
             loginResponse.setUser(user);
             loginResponse.setSuccess(true);
+            return loginResponse;
         } catch (Exception ex) {
             ex.printStackTrace();
-            loginResponse.setUser(null);
-            loginResponse.setSuccess(false);
+            return new LoginResponse();
         }
-        return loginResponse;
     }
 }

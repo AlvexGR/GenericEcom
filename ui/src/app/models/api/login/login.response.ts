@@ -6,10 +6,12 @@ import { User } from '../../user.model';
  */
 export class LoginResponse extends BaseResponse {
   user: User;
+  jwtToken: string;
 
-  constructor(user: User) {
+  constructor(user: User, jwtToken: string) {
     super();
 
     this.user = user;
+    this.jwtToken = jwtToken;
   }
 }

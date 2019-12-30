@@ -10,6 +10,7 @@ import { ActivatedRoute } from "@angular/router";
 import { Subscription } from 'rxjs';
 import { ErrorCode, errorMessage } from 'src/app/helpers/enums/error-code.enum';
 import { filter } from "rxjs/operators";
+import { storageKey } from 'src/app/helpers/constant';
 
 /**
  * Author: nhannn
@@ -85,7 +86,10 @@ export class LoginComponent implements OnInit, OnDestroy {
       this.email.value,
       this.password.value
     );
-    console.log(loginResponse);
+    if (loginResponse && loginResponse.user && loginResponse.jwtToken) {
+      loginResponse.user.accessToken = loginResponse.jwtToken;
+      localStorage.setItem(storageKey.CURRENT_USER, JSON.stringify(loginResponse.user));
+    }
     this.waitingForResponse = false;
   }
 

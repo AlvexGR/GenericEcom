@@ -1,6 +1,6 @@
 package com.nhannn.generic_ecom.configs;
 
-import com.nhannn.generic_ecom.helpers.encryptors.Encryption;
+import com.nhannn.generic_ecom.helpers.Encryption;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
