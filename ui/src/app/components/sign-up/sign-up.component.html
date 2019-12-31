@@ -16,7 +16,7 @@
                     type="text"
                     class="form-control"
                     formControlName="firstName"
-                    [ngClass]="{'is-invalid': errors.firstNameError != null}"
+                    [ngClass]="{ 'is-invalid': errors.firstNameError != null }"
                   />
                 </div>
                 <div class="col">
@@ -25,7 +25,7 @@
                     type="text"
                     class="form-control"
                     formControlName="lastName"
-                    [ngClass]="{'is-invalid': errors.lastNameError != null}"
+                    [ngClass]="{ 'is-invalid': errors.lastNameError != null }"
                   />
                 </div>
               </div>
@@ -44,7 +44,7 @@
                 type="email"
                 class="form-control"
                 formControlName="email"
-                [ngClass]="{'is-invalid': errors.emailError != null}"
+                [ngClass]="{ 'is-invalid': errors.emailError != null }"
               />
               <div class="text-danger">{{ errors.emailError }}</div>
             </div>
@@ -56,7 +56,7 @@
                     type="password"
                     class="form-control"
                     formControlName="password"
-                    [ngClass]="{'is-invalid': errors.passwordError != null}"
+                    [ngClass]="{ 'is-invalid': errors.passwordError != null }"
                   />
                 </div>
                 <div class="col">
@@ -65,7 +65,9 @@
                     type="password"
                     class="form-control"
                     formControlName="passwordConfirm"
-                    [ngClass]="{'is-invalid': errors.passwordConfirmError != null}"
+                    [ngClass]="{
+                      'is-invalid': errors.passwordConfirmError != null
+                    }"
                   />
                 </div>
               </div>
@@ -81,10 +83,14 @@
                   <small class="form-text text-muted">
                     At least 1 number (0-9)
                   </small>
-                  <small class="form-text text-muted">At least 8 characters</small>
+                  <small class="form-text text-muted"
+                    >At least 8 characters</small
+                  >
                 </div>
                 <div class="col">
-                  <div class="text-danger">{{ errors.passwordConfirmError }}</div>
+                  <div class="text-danger">
+                    {{ errors.passwordConfirmError }}
+                  </div>
                 </div>
               </div>
             </div>
@@ -94,7 +100,7 @@
                 type="text"
                 class="form-control"
                 formControlName="phoneNumber"
-                [ngClass]="{'is-invalid': errors.phoneNumberError != null}"
+                [ngClass]="{ 'is-invalid': errors.phoneNumberError != null }"
               />
               <div class="text-danger">{{ errors.phoneNumberError }}</div>
             </div>
@@ -136,21 +142,19 @@
             </div>
             <div class="form-group">
               <button
-                *ngIf="!waitingForResponse"
+                *ngIf="!waitingForResponse; else loading"
                 type="submit"
                 class="btn btn-primary form-control"
                 [disabled]="signUpForm.invalid"
               >
                 Sign up
               </button>
-              <button
-                *ngIf="waitingForResponse"
-                class="btn btn-primary form-control"
-                disabled
-              >
-                <span class="spinner-border spinner-border-sm"></span>
-                Signing up...
-              </button>
+              <ng-template #loading>
+                <button class="btn btn-primary form-control" disabled>
+                  <span class="spinner-border spinner-border-sm"></span>
+                  Signing up...
+                </button>
+              </ng-template>
             </div>
             <div class="text-danger text-center form-group">
               {{ errors.generalError }}

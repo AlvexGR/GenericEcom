@@ -125,12 +125,14 @@ export class SignUpComponent implements OnInit, OnDestroy {
           }
         }),
       this.passwordConfirm.valueChanges.subscribe(pwd => {
+        this.passwordConfirm.setErrors({ incorrect: true });
         if (pwd === "") {
           this.handleError(ErrorCode.PasswordConfirmEmpty);
         } else if (pwd !== this.password.value) {
           this.handleError(ErrorCode.PasswordNotMatched);
         } else {
           this.errors.passwordConfirmError = null;
+          this.passwordConfirm.setErrors(null);
         }
       })
     ];
@@ -167,7 +169,10 @@ export class SignUpComponent implements OnInit, OnDestroy {
       )
     );
     this.waitingForResponse = false;
-    const result = this.handleError(response ? response.errorCode : null, true);
+    const result = this.handleError(
+      response ? response.errorCode : ErrorCode.InternalError,
+      true
+    );
     if (result) {
       this.router.navigate(["/sign-up-success"]);
     }
@@ -196,8 +201,7 @@ export class SignUpComponent implements OnInit, OnDestroy {
       this.resetErrorMessage();
     }
     if (!errorCode) {
-      this.errors.generalError = errorMessage.INTERNAL_ERROR;
-      return false;
+      errorCode = ErrorCode.InternalError;
     }
     if (errorCode !== ErrorCode.Success) {
       switch (errorCode) {

@@ -14,7 +14,7 @@
                 type="email"
                 class="form-control"
                 formControlName="email"
-                [ngClass]="{'is-invalid': errors.emailError != null}"
+                [ngClass]="{ 'is-invalid': errors.emailError != null }"
               />
               <div class="text-danger">{{ errors.emailError }}</div>
             </div>
@@ -24,27 +24,25 @@
                 type="password"
                 class="form-control"
                 formControlName="password"
-                [ngClass]="{'is-invalid': errors.passwordError != null}"
+                [ngClass]="{ 'is-invalid': errors.passwordError != null }"
               />
               <div class="text-danger">{{ errors.passwordError }}</div>
             </div>
             <div class="form-group">
               <button
-                *ngIf="!waitingForResponse"
+                *ngIf="!waitingForResponse; else loading"
                 type="submit"
                 class="btn btn-primary form-control"
                 [disabled]="loginForm.invalid"
               >
                 Login
               </button>
-              <button
-                *ngIf="waitingForResponse"
-                class="btn btn-primary form-control"
-                disabled
-              >
-                <span class="spinner-border spinner-border-sm"></span>
-                Checking credentials...
-              </button>
+              <ng-template #loading>
+                <button class="btn btn-primary form-control" disabled>
+                  <span class="spinner-border spinner-border-sm"></span>
+                  Checking credentials...
+                </button>
+              </ng-template>
             </div>
             <div class="text-danger text-center form-group">
               <div class="text-danger">{{ errors.generalError }}</div>

@@ -44,5 +44,5 @@ export const errorMessage = {
   PASSWORD_CONFIRM_EMPTY: "Please enter your password confirmation",
   LOGIN_FAILED: "Login failed, please check your credentials",
 
-  INTERNAL_ERROR: "Something went wrong"
+  INTERNAL_ERROR: "Something went wrong. Please try again later"
 };

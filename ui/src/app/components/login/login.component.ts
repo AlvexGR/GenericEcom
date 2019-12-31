@@ -1,3 +1,4 @@
+import { HttpHelper } from 'src/app/helpers/http.helper';
 import { Component, OnInit, OnDestroy } from "@angular/core";
 import { UserService } from "src/app/services/user-service/user.service";
 import {
@@ -82,6 +83,7 @@ export class LoginComponent implements OnInit, OnDestroy {
    */
   async login(): Promise<void> {
     this.waitingForResponse = true;
+    await HttpHelper.imitateResponseBehavior(3000);
     const loginResponse = await this.userService.login(
       this.email.value,
       this.password.value
