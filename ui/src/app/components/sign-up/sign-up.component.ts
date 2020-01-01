@@ -5,7 +5,6 @@ import {
   AbstractControl,
   Validators
 } from "@angular/forms";
-import { UserService } from "src/app/services/user-service/user.service";
 import { Router } from "@angular/router";
 import { User } from "src/app/models/user.model";
 import { UserStatus } from "src/app/helpers/enums/user-status.enum";
@@ -13,6 +12,7 @@ import { Role } from "src/app/helpers/enums/role.enum";
 import { errorMessage, ErrorCode } from "src/app/helpers/enums/error-code.enum";
 import { filter } from "rxjs/operators";
 import { Subscription } from "rxjs";
+import { UserService } from 'src/app/services/user-service/user.service';
 
 /**
  * Author: nhannn

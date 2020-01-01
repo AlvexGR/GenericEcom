@@ -8,10 +8,12 @@ import com.nhannn.generic_ecom.models.apis.BaseRequest;
 public class LoginRequest extends BaseRequest {
     private String email;
     private String password;
+    private Boolean rememberMe;
 
-    public LoginRequest(String email, String password) {
+    public LoginRequest(String email, String password, Boolean rememberMe) {
         this.email = email;
         this.password = password;
+        this.rememberMe = rememberMe;
     }
 
     public LoginRequest() {}
@@ -30,5 +32,13 @@ public class LoginRequest extends BaseRequest {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Boolean getRememberMe() {
+        return rememberMe;
+    }
+
+    public void setRememberMe(Boolean rememberMe) {
+        this.rememberMe = rememberMe;
     }
 }

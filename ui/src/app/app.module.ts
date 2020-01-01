@@ -12,7 +12,10 @@ import { UserService } from "./services/user-service/user.service";
 import { HeaderComponent } from "./components/header/header.component";
 import { MenuComponent } from "./components/menu/menu.component";
 import { FooterComponent } from "./components/footer/footer.component";
-import { SignUpSuccessComponent } from './components/sign-up/sign-up-success/sign-up-success.component';
+import { SignUpSuccessComponent } from "./components/sign-up/sign-up-success/sign-up-success.component";
+import { AngularFireAuthModule } from "@angular/fire/auth";
+import { AngularFireModule } from '@angular/fire';
+import { environment } from '../environments/environment';
 
 /**
  * Author: nhannn
@@ -32,7 +35,9 @@ import { SignUpSuccessComponent } from './components/sign-up/sign-up-success/sig
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    AngularFireModule.initializeApp(environment.firebaseConfig, "GenericEcommerce"),
+    AngularFireAuthModule
   ],
   providers: [UserService],
   bootstrap: [AppComponent]

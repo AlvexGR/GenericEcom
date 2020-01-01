@@ -1,6 +1,5 @@
 import { HttpHelper } from 'src/app/helpers/http.helper';
 import { Component, OnInit, OnDestroy } from "@angular/core";
-import { UserService } from "src/app/services/user-service/user.service";
 import {
   FormBuilder,
   FormGroup,
@@ -12,6 +11,8 @@ import { Subscription } from 'rxjs';
 import { ErrorCode, errorMessage } from 'src/app/helpers/enums/error-code.enum';
 import { filter } from "rxjs/operators";
 import { storageKey } from 'src/app/helpers/constant';
+import { UserService } from 'src/app/services/user-service/user.service';
+import { User } from 'src/app/models/user.model';
 
 /**
  * Author: nhannn
@@ -40,7 +41,8 @@ export class LoginComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.loginForm = this.formBuilder.group({
       email: ["", Validators.required],
-      password: ["", Validators.required]
+      password: ["", Validators.required],
+      rememberMe: [false]
     });
     this.returnUrl = this.route.snapshot.queryParamMap.get("returnUrl") || "/";
     this.waitingForResponse = false;
@@ -86,13 +88,21 @@ export class LoginComponent implements OnInit, OnDestroy {
     await HttpHelper.imitateResponseBehavior(3000);
     const loginResponse = await this.userService.login(
       this.email.value,
-      this.password.value
+      this.password.value,
+      this.rememberMe.value
     );
     if (loginResponse && loginResponse.user && loginResponse.jwtToken) {
       loginResponse.user.accessToken = loginResponse.jwtToken;
       localStorage.setItem(storageKey.CURRENT_USER, JSON.stringify(loginResponse.user));
     }
     this.waitingForResponse = false;
+  }
+
+  /**
+   * Login as Google
+   */
+  async loginAsGoogle(): Promise<void> {
+    await this.userService.loginAsGoogle();
   }
 
   /**
@@ -146,5 +156,9 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   get password(): AbstractControl {
     return this.loginForm.get("password");
+  }
+
+  get rememberMe(): AbstractControl {
+    return this.loginForm.get("rememberMe");
   }
 }

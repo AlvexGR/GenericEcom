@@ -50,6 +50,21 @@ public class UserController {
         return user;
     }
 
+    /**
+     * Check if there is any user with this email
+     * @param email to check
+     * @return true if exists otherwise false
+     */
+    @GetMapping(path = "/verify/{email}")
+    public boolean verifyEmailExistence(@PathVariable("email") String email) {
+        return false;
+    }
+
+    /**
+     * Sign up new account
+     * @param signUpRequest contains new user profile
+     * @return successfully created user
+     */
     @PostMapping(path = "sign-up")
     public SignUpResponse signUp(@RequestBody SignUpRequest signUpRequest) {
         try {
@@ -61,13 +76,18 @@ public class UserController {
         }
     }
 
+    /**
+     * Normal login with email and password
+     * @param loginRequest contains email and password
+     * @return full user with access token
+     */
     @PostMapping(path = "login")
     public LoginResponse login(@RequestBody LoginRequest loginRequest) {
         try {
             LoginResponse loginResponse = new LoginResponse();
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
             UserDetails userDetails = jwtUserDetailsService.loadUserByUsername(loginRequest.getEmail());
-            String token = jwtToken.generateToken(userDetails);
+            String token = jwtToken.generateToken(userDetails, loginRequest.getRememberMe());
             loginResponse.setJwtToken(token);
 
             User user = userService.getByEmail(loginRequest.getEmail());

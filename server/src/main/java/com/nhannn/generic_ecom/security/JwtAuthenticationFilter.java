@@ -1,6 +1,5 @@
 package com.nhannn.generic_ecom.security;
 
-import com.nhannn.generic_ecom.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -64,6 +63,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
         } catch (Exception ex) {
             // ignore and continue
+            ex.printStackTrace();
         }
         filterChain.doFilter(request, response);
     }
