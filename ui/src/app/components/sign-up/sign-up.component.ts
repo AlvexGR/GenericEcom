@@ -10,9 +10,11 @@ import { User } from "src/app/models/user.model";
 import { UserStatus } from "src/app/helpers/enums/user-status.enum";
 import { Role } from "src/app/helpers/enums/role.enum";
 import { errorMessage, ErrorCode } from "src/app/helpers/enums/error-code.enum";
-import { filter } from "rxjs/operators";
-import { Subscription } from "rxjs";
-import { UserService } from 'src/app/services/user-service/user.service';
+import { filter, startWith } from "rxjs/operators";
+import { UserService } from "src/app/services/user-service/user.service";
+import { combineLatest, Subscription } from "rxjs";
+import { common } from "src/app/helpers/constant";
+import { CommonHelper } from "src/app/helpers/common.helper";
 
 /**
  * Author: nhannn
@@ -48,10 +50,7 @@ export class SignUpComponent implements OnInit, OnDestroy {
       email: ["", [Validators.required, Validators.email]],
       password: [
         "",
-        [
-          Validators.required,
-          Validators.pattern("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$")
-        ]
+        [Validators.required, Validators.pattern(common.passwordPattern)]
       ],
       passwordConfirm: ["", Validators.required],
       phoneNumber: ["", [Validators.required, Validators.pattern("^[0-9]*$")]],
@@ -111,28 +110,29 @@ export class SignUpComponent implements OnInit, OnDestroy {
             );
           }
         }),
-      this.password.statusChanges
-        .pipe(filter(status => status === "VALID" || status === "INVALID"))
-        .subscribe(status => {
-          if (status === "VALID") {
-            this.errors.passwordError = null;
-          } else {
-            this.handleError(
-              this.password.value === ""
-                ? ErrorCode.PasswordEmpty
-                : ErrorCode.PasswordConventionFailed
-            );
-          }
-        }),
-      this.passwordConfirm.valueChanges.subscribe(pwd => {
-        this.passwordConfirm.setErrors({ incorrect: true });
-        if (pwd === "") {
+      combineLatest(
+        this.password.valueChanges,
+        this.passwordConfirm.valueChanges
+      ).subscribe(([pwd, cpwd]) => {
+        if (pwd !== "" && !CommonHelper.validatePassword(pwd)) {
+          this.handleError(ErrorCode.PasswordConventionFailed);
+        } else if (pwd === "") {
+          this.handleError(ErrorCode.PasswordEmpty);
+        }
+
+        if (cpwd === "") {
           this.handleError(ErrorCode.PasswordConfirmEmpty);
-        } else if (pwd !== this.password.value) {
+        } else if (pwd !== cpwd) {
+          this.passwordConfirm.setErrors({ incorrect: true });
           this.handleError(ErrorCode.PasswordNotMatched);
         } else {
-          this.errors.passwordConfirmError = null;
           this.passwordConfirm.setErrors(null);
+        }
+        if (this.password.valid) {
+          this.errors.passwordError = null;
+        }
+        if (this.passwordConfirm.valid) {
+          this.errors.passwordConfirmError = null;
         }
       })
     ];

@@ -12,14 +12,19 @@ import javax.persistence.TypedQuery;
 public class UserRepository extends BaseRepository<User> implements IUserRepository {
     @Override
     public User getByEmail(String email) {
-        String sql =
-                " SELECT u " +
-                " FROM users u " +
-                " WHERE u.email = :email";
+        try {
+            String sql =
+                    " SELECT u " +
+                    " FROM users u " +
+                    " WHERE u.email = :email";
 
-        TypedQuery<User> query = entityManager.createQuery(sql, User.class);
-        query.setParameter("email", email);
+            TypedQuery<User> query = entityManager.createQuery(sql, User.class);
+            query.setParameter("email", email);
 
-        return query.getSingleResult();
+            return query.getSingleResult();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return null;
+        }
     }
 }

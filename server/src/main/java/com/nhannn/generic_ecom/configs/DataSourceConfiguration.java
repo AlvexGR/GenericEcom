@@ -16,9 +16,9 @@ public class DataSourceConfiguration {
     public DataSource getDataSource() {
         return DataSourceBuilder
                 .create()
-                .url(Encryption.decrypt("Qwv11mBxCKbzlTAaYq9EKQ==:JjyYIRGQ2lf2w067vRucpctlTjh1C+Okan5huHJOMP9k14EEnsLBeNz+E9Vpoz4IrL5KUhyT/kZfVoENtY+QFA=="))
+                .url(Encryption.decrypt("1KQHdmlqwofR9d42C/prWQ==:2FfHmk3ligovEUl+VyIKX5g12H04Vyd1Ibmv8sklcJ8aVuB02coM+nGQjxjG+e/K13IjeFt4Q/o9SF2d0m0Wjol25jvsnBzC6SgXfhK2JmgBOnu4wy45bUjzcgMN83V+"))
                 .username(Encryption.decrypt("y4oXdkRyb05xIfHPY3F58Q==:IJrUPPwx6fvrfojOpQzEmA=="))
-                .password(Encryption.decrypt("JH8C6Q1Sql7/gTdBBLBJtw==:aL3uR85wRmId2OBovPVnAQ=="))
+                .password(Encryption.decrypt("WUPyo/MkhuFF5KarDWqtZA==:L1eQm0G2IFcZnbYiQKSp3A=="))
                 .build();
     }
 }

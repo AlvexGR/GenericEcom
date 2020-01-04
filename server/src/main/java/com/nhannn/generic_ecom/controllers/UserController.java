@@ -1,6 +1,7 @@
 package com.nhannn.generic_ecom.controllers;
 
 import com.nhannn.generic_ecom.models.User;
+import com.nhannn.generic_ecom.models.apis.login.GoogleLoginRequest;
 import com.nhannn.generic_ecom.models.apis.login.LoginRequest;
 import com.nhannn.generic_ecom.models.apis.login.LoginResponse;
 import com.nhannn.generic_ecom.models.apis.sign_up.SignUpRequest;
@@ -8,12 +9,14 @@ import com.nhannn.generic_ecom.models.apis.sign_up.SignUpResponse;
 import com.nhannn.generic_ecom.security.JwtToken;
 import com.nhannn.generic_ecom.security.JwtUserDetailsService;
 import com.nhannn.generic_ecom.services.interfaces.IUserService;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.UUID;
 
@@ -51,16 +54,6 @@ public class UserController {
     }
 
     /**
-     * Check if there is any user with this email
-     * @param email to check
-     * @return true if exists otherwise false
-     */
-    @GetMapping(path = "/verify/{email}")
-    public boolean verifyEmailExistence(@PathVariable("email") String email) {
-        return false;
-    }
-
-    /**
      * Sign up new account
      * @param signUpRequest contains new user profile
      * @return successfully created user
@@ -91,6 +84,49 @@ public class UserController {
             loginResponse.setJwtToken(token);
 
             User user = userService.getByEmail(loginRequest.getEmail());
+            loginResponse.setUser(user);
+            loginResponse.setSuccess(true);
+            return loginResponse;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return new LoginResponse();
+        }
+    }
+
+    /**
+     * Login by google account
+     * If user exists then login
+     * Else create new user then login
+     * @param googleLoginRequest google account info
+     * @return LoginResponse
+     */
+    @PostMapping(path = "login/google")
+    public LoginResponse login(@RequestBody GoogleLoginRequest googleLoginRequest) {
+        try {
+            // call API to google to verify access token
+            RestTemplate restTemplate = new RestTemplate();
+            final String url = "https://www.googleapis.com/oauth2/v1/tokeninfo?access_token="
+                    + googleLoginRequest.getAccessToken();
+            String result = restTemplate.getForObject(url, String.class);
+            JSONObject credential = new JSONObject(result);
+            if (!(boolean)credential.get("verified_email") || !credential.get("email").equals(googleLoginRequest.getEmail())) {
+                return new LoginResponse();
+            }
+            User user = userService.getByEmail(googleLoginRequest.getEmail());
+            // If user doesn't exist => create new
+            if (user == null) {
+                user = userService.createWithRandomPassword();
+                user.setEmail(googleLoginRequest.getEmail());
+                user.setFirstName(googleLoginRequest.getFirstName());
+                user.setLastName(googleLoginRequest.getLastName());
+                user.setPhoneNumber(googleLoginRequest.getPhoneNubmer());
+                userService.insert(user);
+            }
+            // Login
+            LoginResponse loginResponse = new LoginResponse();
+            UserDetails userDetails = jwtUserDetailsService.loadUserByUsername(user.getEmail(), user.getPassword());
+            String token = jwtToken.generateToken(userDetails, false);
+            loginResponse.setJwtToken(token);
             loginResponse.setUser(user);
             loginResponse.setSuccess(true);
             return loginResponse;

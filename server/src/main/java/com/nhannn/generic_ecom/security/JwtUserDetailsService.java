@@ -7,6 +7,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 
@@ -30,5 +31,12 @@ public class JwtUserDetailsService implements UserDetailsService {
             return null;
         }
         return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), new ArrayList<>());
+    }
+
+    public UserDetails loadUserByUsername(String username, String password) throws UsernameNotFoundException {
+        if (StringUtils.isEmpty(username) || StringUtils.isEmpty(password)) {
+            return null;
+        }
+        return new org.springframework.security.core.userdetails.User(username, password, new ArrayList<>());
     }
 }

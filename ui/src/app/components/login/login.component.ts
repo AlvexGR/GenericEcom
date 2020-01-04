@@ -12,7 +12,6 @@ import { ErrorCode, errorMessage } from 'src/app/helpers/enums/error-code.enum';
 import { filter } from "rxjs/operators";
 import { storageKey } from 'src/app/helpers/constant';
 import { UserService } from 'src/app/services/user-service/user.service';
-import { User } from 'src/app/models/user.model';
 
 /**
  * Author: nhannn
@@ -102,7 +101,11 @@ export class LoginComponent implements OnInit, OnDestroy {
    * Login as Google
    */
   async loginAsGoogle(): Promise<void> {
-    await this.userService.loginAsGoogle();
+    const loginResponse = await this.userService.loginAsGoogle();
+    if (loginResponse && loginResponse.user && loginResponse.jwtToken) {
+      loginResponse.user.accessToken = loginResponse.jwtToken;
+      localStorage.setItem(storageKey.CURRENT_USER, JSON.stringify(loginResponse.user));
+    }
   }
 
   /**

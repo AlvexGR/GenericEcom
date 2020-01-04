@@ -1,3 +1,4 @@
+import { GoogleLoginRequest } from "./../../models/api/login/google-login.request";
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { User } from "src/app/models/user.model";
@@ -42,7 +43,11 @@ export class UserService {
    * @param email credentials
    * @param password credentials
    */
-  public async login(email: string, password: string, rememberMe: boolean = false): Promise<LoginResponse> {
+  public async login(
+    email: string,
+    password: string,
+    rememberMe: boolean = false
+  ): Promise<LoginResponse> {
     const request = new LoginRequest(email, password, rememberMe);
     const headers = HttpHelper.createHeader();
     const url = HttpHelper.baseUrl + HttpHelper.usersUrl + "login";
@@ -58,39 +63,29 @@ export class UserService {
   }
 
   /**
-   * Check if there is any user with this email on back end server
-   * @param email toCheck
-   */
-  public async verifyEmailExistence(email: string): Promise<boolean> {
-    const headers = HttpHelper.createHeader();
-    const url = HttpHelper.baseUrl + HttpHelper.usersUrl + `verify/${email}`;
-    try {
-      const response = await this.http
-        .get<boolean>(url, { headers })
-        .toPromise();
-      return response;
-    } catch (err) {
-      console.log(err);
-      return null;
-    }
-  }
-
-  /**
    * Google login
    */
-  public async loginAsGoogle(): Promise<void> {
+  public async loginAsGoogle(): Promise<LoginResponse> {
     try {
       const authUser = await this.fireAuth.auth.signInWithPopup(
         new auth.GoogleAuthProvider()
       );
-      if (await this.verifyEmailExistence(authUser.user.email)) {
-        // login
-      } else {
-        // register
-      }
-      console.log(authUser);
+      const googleLoginRequest = new GoogleLoginRequest(
+        authUser.additionalUserInfo.profile["email"],
+        authUser.additionalUserInfo.profile["given_name"],
+        authUser.additionalUserInfo.profile["family_name"],
+        authUser.user.phoneNumber,
+        authUser.credential["accessToken"]
+      );
+      const headers = HttpHelper.createHeader();
+      const url = HttpHelper.baseUrl + HttpHelper.usersUrl + "login/google";
+      const response = await this.http
+        .post<LoginResponse>(url, googleLoginRequest, { headers, observe: "response" })
+        .toPromise();
+      return response.body;
     } catch (err) {
       console.log(err);
+      return null;
     }
   }
 

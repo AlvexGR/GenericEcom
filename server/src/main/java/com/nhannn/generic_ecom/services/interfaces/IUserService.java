@@ -9,5 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 public interface IUserService {
     User getById(String id);
     User getByEmail(String email);
+    User createWithRandomPassword();
+
     void insert(User user);
 }

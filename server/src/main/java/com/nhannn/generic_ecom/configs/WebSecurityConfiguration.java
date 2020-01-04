@@ -37,7 +37,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     }
 
     /**
-     * Workaround for circular dependencies
+     * Workaround for circular dependencies with setter and getter
      * Source: https://www.baeldung.com/circular-dependencies-in-spring
      */
     @Autowired
@@ -75,7 +75,8 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers(
                         "/api/users/login",
-                        "/api/users/sign-up")
+                        "/api/users/sign-up",
+                        "/api/users/login/google")
                 .permitAll()
                 .anyRequest().authenticated().and()
                 .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and()
