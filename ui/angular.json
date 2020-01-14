@@ -21,7 +21,8 @@
             "aot": false,
             "assets": [
               "src/GE_icon.ico",
-              "src/assets"
+              "src/assets",
+              "src/web.config"
             ],
             "styles": [
               "src/styles.css"
