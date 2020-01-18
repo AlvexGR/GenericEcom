@@ -1,24 +1,15 @@
 package com.nhannn.generic_ecom.controllers;
 
+import com.nhannn.generic_ecom.models.AuthenticatedUser;
 import com.nhannn.generic_ecom.models.User;
 import com.nhannn.generic_ecom.models.apis.login.GoogleLoginRequest;
 import com.nhannn.generic_ecom.models.apis.login.LoginRequest;
 import com.nhannn.generic_ecom.models.apis.login.LoginResponse;
 import com.nhannn.generic_ecom.models.apis.sign_up.SignUpRequest;
 import com.nhannn.generic_ecom.models.apis.sign_up.SignUpResponse;
-import com.nhannn.generic_ecom.security.JwtToken;
-import com.nhannn.generic_ecom.security.JwtUserDetailsService;
 import com.nhannn.generic_ecom.services.interfaces.IUserService;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
-
-import java.util.UUID;
 
 /**
  * Author: nhannn
@@ -27,64 +18,58 @@ import java.util.UUID;
 @RestController
 public class UserController {
     private final IUserService userService;
-    private final AuthenticationManager authenticationManager;
-    private final JwtToken jwtToken;
-    private final JwtUserDetailsService jwtUserDetailsService;
 
     @Autowired
-    public UserController(
-            IUserService userService,
-            AuthenticationManager authenticationManager,
-            JwtToken jwtToken,
-            JwtUserDetailsService jwtUserDetailsService) {
+    public UserController(IUserService userService) {
         this.userService = userService;
-        this.authenticationManager = authenticationManager;
-        this.jwtToken = jwtToken;
-        this.jwtUserDetailsService = jwtUserDetailsService;
     }
 
     /**
      * API testing
+     *
      * @return user
      */
     @GetMapping
     public User getById() {
-        User user = userService.getById("0a51df0c-9e36-4051-87fc-d9992b62f940");
+        User user = userService.getById("c9474f09-157e-4055-bdec-cbe7fdc9f394");
         return user;
     }
 
     /**
      * Sign up new account
+     *
      * @param signUpRequest contains new user profile
      * @return successfully created user
      */
     @PostMapping(path = "sign-up")
     public SignUpResponse signUp(@RequestBody SignUpRequest signUpRequest) {
         try {
-            userService.insert(signUpRequest.getUser());
-            return new SignUpResponse(true);
-        } catch(Exception ex) {
+            boolean result = userService.signUp(signUpRequest.getUser());
+            return new SignUpResponse(result);
+        } catch (Exception ex) {
             ex.printStackTrace();
-            return new SignUpResponse(false);
+            return new SignUpResponse();
         }
     }
 
     /**
      * Normal login with email and password
+     *
      * @param loginRequest contains email and password
      * @return full user with access token
      */
     @PostMapping(path = "login")
     public LoginResponse login(@RequestBody LoginRequest loginRequest) {
         try {
+            AuthenticatedUser authenticatedUser =
+                    userService.login(
+                            loginRequest.getEmail(),
+                            loginRequest.getPassword(),
+                            loginRequest.getRememberMe()
+                    );
             LoginResponse loginResponse = new LoginResponse();
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
-            UserDetails userDetails = jwtUserDetailsService.loadUserByUsername(loginRequest.getEmail());
-            String token = jwtToken.generateToken(userDetails, loginRequest.getRememberMe());
-            loginResponse.setJwtToken(token);
-
-            User user = userService.getByEmail(loginRequest.getEmail());
-            loginResponse.setUser(user);
+            loginResponse.setJwtToken(authenticatedUser.getAccessToken());
+            loginResponse.setUser(authenticatedUser);
             loginResponse.setSuccess(true);
             return loginResponse;
         } catch (Exception ex) {
@@ -95,39 +80,17 @@ public class UserController {
 
     /**
      * Login by google account
-     * If user exists then login
-     * Else create new user then login
+     *
      * @param googleLoginRequest google account info
      * @return LoginResponse
      */
     @PostMapping(path = "login/google")
     public LoginResponse login(@RequestBody GoogleLoginRequest googleLoginRequest) {
         try {
-            // call API to google to verify access token
-            RestTemplate restTemplate = new RestTemplate();
-            final String url = "https://www.googleapis.com/oauth2/v1/tokeninfo?access_token="
-                    + googleLoginRequest.getAccessToken();
-            String result = restTemplate.getForObject(url, String.class);
-            JSONObject credential = new JSONObject(result);
-            if (!(boolean)credential.get("verified_email") || !credential.get("email").equals(googleLoginRequest.getEmail())) {
-                return new LoginResponse();
-            }
-            User user = userService.getByEmail(googleLoginRequest.getEmail());
-            // If user doesn't exist => create new
-            if (user == null) {
-                user = userService.createWithRandomPassword();
-                user.setEmail(googleLoginRequest.getEmail());
-                user.setFirstName(googleLoginRequest.getFirstName());
-                user.setLastName(googleLoginRequest.getLastName());
-                user.setPhoneNumber(googleLoginRequest.getPhoneNubmer());
-                userService.insert(user);
-            }
-            // Login
+            AuthenticatedUser authenticatedUser = userService.loginWithGoogle(googleLoginRequest);
             LoginResponse loginResponse = new LoginResponse();
-            UserDetails userDetails = jwtUserDetailsService.loadUserByUsername(user.getEmail(), user.getPassword());
-            String token = jwtToken.generateToken(userDetails, false);
-            loginResponse.setJwtToken(token);
-            loginResponse.setUser(user);
+            loginResponse.setJwtToken(authenticatedUser.getAccessToken());
+            loginResponse.setUser(authenticatedUser);
             loginResponse.setSuccess(true);
             return loginResponse;
         } catch (Exception ex) {
