@@ -63,7 +63,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
         } catch (Exception ex) {
             // ignore and continue
-            ex.printStackTrace();
         }
         filterChain.doFilter(request, response);
     }
