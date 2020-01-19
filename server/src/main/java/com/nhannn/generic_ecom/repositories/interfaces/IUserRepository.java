@@ -7,4 +7,5 @@ import com.nhannn.generic_ecom.models.User;
  */
 public interface IUserRepository extends IBaseRepository<User> {
     User getByEmail(String email);
+    int countByEmail(String email);
 }

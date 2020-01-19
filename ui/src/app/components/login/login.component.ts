@@ -90,11 +90,15 @@ export class LoginComponent implements OnInit, OnDestroy {
       this.password.value,
       this.rememberMe.value
     );
-    if (loginResponse && loginResponse.user && loginResponse.jwtToken) {
+    this.waitingForResponse = false;
+    const result = this.handleError(
+      loginResponse ? loginResponse.errorCode : ErrorCode.InternalError,
+      true
+    );
+    if (result && loginResponse && loginResponse.user && loginResponse.jwtToken) {
       loginResponse.user.accessToken = loginResponse.jwtToken;
       localStorage.setItem(storageKey.CURRENT_USER, JSON.stringify(loginResponse.user));
     }
-    this.waitingForResponse = false;
   }
 
   /**
@@ -135,13 +139,10 @@ export class LoginComponent implements OnInit, OnDestroy {
         case ErrorCode.EmailEmpty:
           this.errors.emailError = errorMessage.EMAIL_EMPTY;
           break;
-        case ErrorCode.EmailExisted:
-          this.errors.emailError = errorMessage.EMAIL_EXISTED;
-          break;
         case ErrorCode.PasswordEmpty:
           this.errors.passwordError = errorMessage.PASSWORD_EMPTY;
           break;
-        case ErrorCode.LoginFailed:
+        case ErrorCode.LoginFailed || ErrorCode.BadRequest:
           this.errors.generalError = errorMessage.LOGIN_FAILED;
           break;
         case ErrorCode.InternalError:

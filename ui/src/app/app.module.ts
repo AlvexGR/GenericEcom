@@ -16,6 +16,7 @@ import { SignUpSuccessComponent } from "./components/sign-up/sign-up-success/sig
 import { AngularFireAuthModule } from "@angular/fire/auth";
 import { AngularFireModule } from '@angular/fire';
 import { environment } from '../environments/environment';
+import { ActivateSuccessComponent } from './components/sign-up/activate-success/activate-success.component';
 
 /**
  * Author: nhannn
@@ -29,7 +30,8 @@ import { environment } from '../environments/environment';
     HeaderComponent,
     MenuComponent,
     FooterComponent,
-    SignUpSuccessComponent
+    SignUpSuccessComponent,
+    ActivateSuccessComponent
   ],
   imports: [
     BrowserModule,

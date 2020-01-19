@@ -1,9 +1,10 @@
-import { HttpHeaders } from '@angular/common/http';
+import { HttpHeaders } from "@angular/common/http";
 
 /**
  * Author: nhannn
  */
 export class HttpHelper {
+  static authPrefix = "Bearer";
   static baseUrl = "http://localhost:8080/api/";
   static usersUrl = "users/";
 
@@ -13,9 +14,9 @@ export class HttpHelper {
    */
   public static createHeader(accessToken: string = ""): HttpHeaders {
     return new HttpHeaders({
-      "Content-Type":  "application/json",
-      "Accept": "application/json",
-      "Authorization": accessToken || ""
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      Authorization: `${this.authPrefix} ${accessToken || ""}`
     });
   }
 

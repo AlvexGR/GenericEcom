@@ -9,6 +9,7 @@ import com.nhannn.generic_ecom.models.apis.login.GoogleLoginRequest;
  */
 public interface IUserService {
     User getById(String id);
+    boolean containsEmail(String email);
     boolean signUp(User user);
     AuthenticatedUser login(String email, String password, Boolean rememberMe);
     AuthenticatedUser loginWithGoogle(GoogleLoginRequest googleLoginRequest);

@@ -20,7 +20,8 @@ export enum ErrorCode {
   LoginFailed = "LOGIN_FAILED",
 
   /* General errors */
-  InternalError = "INTERNAL_ERROR"
+  InternalError = "INTERNAL_ERROR",
+  BadRequest = "BAD_REQUEST"
 }
 
 
@@ -44,5 +45,6 @@ export const errorMessage = {
   PASSWORD_CONFIRM_EMPTY: "Please enter your password confirmation",
   LOGIN_FAILED: "Login failed, please check your credentials",
 
-  INTERNAL_ERROR: "Something went wrong. Please try again later"
+  INTERNAL_ERROR: "Something went wrong. Please try again later",
+  BAD_REQUEST: "Something went wrong. Please try again later"
 };

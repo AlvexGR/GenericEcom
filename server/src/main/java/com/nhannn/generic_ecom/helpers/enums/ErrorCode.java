@@ -21,5 +21,6 @@ public enum ErrorCode {
     LOGIN_FAILED,
 
     /* General errors */
-    INTERNAL_ERROR;
+    INTERNAL_ERROR,
+    BAD_REQUEST;
 }

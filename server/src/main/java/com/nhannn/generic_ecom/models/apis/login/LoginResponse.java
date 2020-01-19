@@ -1,5 +1,6 @@
 package com.nhannn.generic_ecom.models.apis.login;
 
+import com.nhannn.generic_ecom.helpers.enums.ErrorCode;
 import com.nhannn.generic_ecom.models.User;
 import com.nhannn.generic_ecom.models.apis.BaseResponse;
 
@@ -10,7 +11,11 @@ public class LoginResponse extends BaseResponse {
     private User user;
     private String jwtToken;
 
-    public LoginResponse(boolean success, User user, String jwtToken) {
+    public LoginResponse(ErrorCode errorCode) {
+        super(errorCode);
+    }
+
+    public LoginResponse(ErrorCode success, User user, String jwtToken) {
         super(success);
         this.user = user;
         this.jwtToken = jwtToken;

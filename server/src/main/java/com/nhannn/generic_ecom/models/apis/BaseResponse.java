@@ -1,23 +1,25 @@
 package com.nhannn.generic_ecom.models.apis;
 
+import com.nhannn.generic_ecom.helpers.enums.ErrorCode;
+
 /**
  * Author: nhannn
  */
 public class BaseResponse {
-    protected boolean success = false;
+    protected ErrorCode errorCode;
 
-    public BaseResponse(boolean success) {
-        this.success = success;
+    public BaseResponse(ErrorCode errorCode) {
+        this.errorCode = errorCode;
     }
 
     public BaseResponse() {
     }
 
-    public boolean isSuccess() {
-        return success;
+    public ErrorCode getErrorCode() {
+        return errorCode;
     }
 
-    public void setSuccess(boolean success) {
-        this.success = success;
+    public void setErrorCode(ErrorCode errorCode) {
+        this.errorCode = errorCode;
     }
 }
